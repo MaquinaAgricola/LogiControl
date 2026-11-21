@@ -1,0 +1,3 @@
+<?php
+$titulo='Relatórios';include __DIR__.'/../includes/topo.php';?>
+<h1 class="h2 page-title mb-3">Relatório de fretes</h1><div class="card p-4"><p>Selecione o dia desejado para baixar um arquivo CSV que pode ser aberto no Excel.</p><form method="get" action="baixar.php" class="row g-3"><div class="col-md-5"><label class="form-label">Data dos fretes</label><input required type="date" name="data" class="form-control" value="<?=date('Y-m-d')?>"></div><div class="col-md-4 align-self-end"><button class="btn btn-primary">Baixar relatório CSV</button></div></form></div><?php include __DIR__.'/../includes/rodape.php';?>

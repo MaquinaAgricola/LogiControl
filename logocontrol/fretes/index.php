@@ -1,0 +1,8 @@
+<?php
+require_once __DIR__.'/../config/conexao.php';$titulo='Fretes';
+$itens=$pdo->query("SELECT f.*,t.nome transportador,eo.cidade origem,ed.cidade destino,(SELECT COUNT(*) FROM frete_produtos fp WHERE fp.frete_id=f.id) qtd,(SELECT COALESCE(SUM(p.peso),0) FROM frete_produtos fp JOIN produtos p ON p.id=fp.produto_id WHERE fp.frete_id=f.id) peso_total FROM fretes f JOIN transportadores t ON t.id=f.transportador_id JOIN enderecos eo ON eo.id=f.origem_id JOIN enderecos ed ON ed.id=f.destino_id ORDER BY f.data_frete DESC,f.id DESC")->fetchAll();
+include __DIR__.'/../includes/topo.php';?>
+<div class="d-flex justify-content-between mb-3"><h1 class="h2 page-title">Fretes</h1><a class="btn btn-primary" href="cadastrar.php">Gerar frete</a></div>
+<div class="card p-3"><div class="table-responsive"><table class="table"><thead><tr><th>Nº</th><th>Data</th><th>Transportador</th><th>Origem</th><th>Destino</th><th>Produtos</th><th>Peso total</th><th>Detalhes</th></tr></thead><tbody>
+<?php foreach($itens as $i):?><tr><td>#<?=$i['id']?></td><td><?=date('d/m/Y',strtotime($i['data_frete']))?></td><td><?=htmlspecialchars($i['transportador'])?></td><td><?=htmlspecialchars($i['origem'])?></td><td><?=htmlspecialchars($i['destino'])?></td><td><?=$i['qtd']?></td><td><?=number_format((float)$i['peso_total'],2,',','.')?> kg</td><td><a class="btn btn-sm btn-outline-primary" href="detalhes.php?id=<?=$i['id']?>">Ver</a></td></tr><?php endforeach;?>
+<?php if(!$itens):?><tr><td colspan="8" class="text-center text-muted">Nenhum frete gerado.</td></tr><?php endif;?></tbody></table></div></div><?php include __DIR__.'/../includes/rodape.php';?>
