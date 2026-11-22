@@ -1,7 +1,0 @@
-<?php
-require_once __DIR__.'/../config/conexao.php';$id=(int)($_GET['id']??0);$erro='';$item=['nome'=>'','documento'=>'','telefone'=>'','email'=>''];
-if($id){$s=$pdo->prepare("SELECT * FROM transportadores WHERE id=?");$s->execute([$id]);$item=$s->fetch()?:$item;}
-if($_SERVER['REQUEST_METHOD']==='POST'){$d=[trim($_POST['nome']??''),trim($_POST['documento']??''),trim($_POST['telefone']??''),trim($_POST['email']??'')];if($d[0]==='')$erro='Informe o nome.';else{if($id){$pdo->prepare("UPDATE transportadores SET nome=?,documento=?,telefone=?,email=? WHERE id=?")->execute([...$d,$id]);}else{$pdo->prepare("INSERT INTO transportadores(nome,documento,telefone,email) VALUES(?,?,?,?)")->execute($d);}header('Location:index.php');exit;}$item=array_combine(['nome','documento','telefone','email'],$d);}
-$titulo=$id?'Editar transportador':'Cadastrar transportador';include __DIR__.'/../includes/topo.php';?>
-<h1 class="h2 page-title mb-3"><?=$titulo?></h1><?php if($erro):?><div class="alert alert-danger"><?=$erro?></div><?php endif;?>
-<div class="card p-4"><form method="post"><?php foreach(['nome'=>'Nome completo / Empresa','documento'=>'CPF/CNPJ','telefone'=>'Telefone','email'=>'E-mail'] as $c=>$r):?><div class="mb-3"><label class="form-label"><?=$r?></label><input class="form-control" name="<?=$c?>" value="<?=htmlspecialchars($item[$c]??'')?>"></div><?php endforeach;?><button class="btn btn-primary">Salvar</button> <a class="btn btn-outline-secondary" href="index.php">Voltar</a></form></div><?php include __DIR__.'/../includes/rodape.php';?>
